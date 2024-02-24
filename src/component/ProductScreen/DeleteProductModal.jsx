@@ -1,10 +1,11 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
 import {
     Modal,
     View,
     Text,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 
 class DeleteProductModal extends Component {
@@ -12,16 +13,16 @@ class DeleteProductModal extends Component {
         super(props);
         this.state = {
             loading: false,
-            errorMessage: ''
+            errorMessage: '',
         };
     }
 
     deleteProduct = () => {
         const { selectedProduct, closeModal, deleteProduct } = this.props;
-        this.setState({ errorMessage: "", loading: true });
+        this.setState({ errorMessage: '', loading: true });
 
         fetch(`http://your-api-url/products/${selectedProduct.id}`, {
-            method: "DELETE"
+            method: 'DELETE',
         })
             .then(res => res.json())
             .then(res => {
@@ -29,10 +30,10 @@ class DeleteProductModal extends Component {
                 deleteProduct(selectedProduct.id);
             })
             .catch((err) => {
-                console.error("Error deleting product:", err);
-                this.setState({ errorMessage: "Network Error. Please try again.", loading: false })
-            })
-    }
+                console.error('Error deleting product:', err);
+                this.setState({ errorMessage: 'Network Error. Please try again.', loading: false });
+            });
+    };
 
     render() {
         const { isOpen, closeModal, selectedProduct } = this.props;
@@ -57,7 +58,7 @@ class DeleteProductModal extends Component {
                             </TouchableOpacity>
 
                             <TouchableOpacity style={{ marginLeft: 10 }} onPress={closeModal}>
-                                <Text style={{ ...styles.buttonText, color: "skyblue" }}>Disagree</Text>
+                                <Text style={{ ...styles.buttonText, color: 'skyblue' }}>Disagree</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -72,37 +73,37 @@ export default DeleteProductModal;
 const styles = StyleSheet.create({
     backgroundContainer: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0,0,0,0.2)"
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.2)',
     },
     container: {
-        width: "90%",
+        width: '90%',
         padding: 15,
-        maxHeight: "40%",
-        backgroundColor: "white",
+        maxHeight: '40%',
+        backgroundColor: 'white',
         borderRadius: 8,
-        elevation: 4
+        elevation: 4,
     },
     title: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         fontSize: 17,
-        marginBottom: 5
+        marginBottom: 5,
     },
     subTitle: {
-        fontSize: 16
+        fontSize: 16,
     },
     buttonContainer: {
         marginTop: 10,
-        flexDirection: "row",
-        alignSelf: "flex-end"
+        flexDirection: 'row',
+        alignSelf: 'flex-end',
     },
     buttonText: {
-        color: "tomato",
-        fontSize: 17
+        color: 'tomato',
+        fontSize: 17,
     },
     message: {
-        color: "tomato",
-        fontSize: 17
-    }
+        color: 'tomato',
+        fontSize: 17,
+    },
 });

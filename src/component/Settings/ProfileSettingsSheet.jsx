@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
 import Fonts from '../../constants/Fonts';
 import Colors from '../../constants/Colors';
 import { TextInput } from 'react-native-element-textinput';
@@ -15,8 +15,8 @@ const ProfileSettingsSheet = ({ onClose }) => {
                 <TouchableOpacity>
                     <Image source={require('../../assets/images/user-profile.jpg')} style={styles.profilePicture} />
                 </TouchableOpacity>
-                <Text style={styles.profileText}>Martha Banks</Text>
-                <Text style={styles.profileMemberText}>Gold Member</Text>
+                <Text style={styles.profileText}>Store</Text>
+                <Text style={styles.profileMemberText}>F&B</Text>
             </View>
             <View style={styles.infoContainer}>
                 <Text style={styles.infoText}>INFORMATIONS</Text>
@@ -27,7 +27,7 @@ const ProfileSettingsSheet = ({ onClose }) => {
                     inputStyle={styles.inputStyle}
                     placeholderStyle={styles.placeholderStyle}
                     textErrorStyle={styles.textErrorStyle}
-                    placeholder="Whatsapp Number"
+                    placeholder="Store Address"
                     placeholderTextColor={Colors.GREY}
                     onChangeText={text => {
                         setValue(text);
@@ -40,7 +40,7 @@ const ProfileSettingsSheet = ({ onClose }) => {
                     inputStyle={styles.inputStyle}
                     placeholderStyle={styles.placeholderStyle}
                     textErrorStyle={styles.textErrorStyle}
-                    placeholder="NIM"
+                    placeholder="WhatsApp Number"
                     placeholderTextColor={Colors.GREY}
                     onChangeText={text => {
                         setValue(text);

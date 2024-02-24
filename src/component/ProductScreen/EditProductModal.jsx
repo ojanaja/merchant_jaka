@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable radix */
 import React, { Component } from 'react';
 import {
     Modal,
@@ -5,18 +7,18 @@ import {
     Text,
     TextInput,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 
 class EditProductModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: "",
-            price: "",
-            quantity: "",
+            name: '',
+            price: '',
+            quantity: '',
             loading: false,
-            errorMessage: ''
+            errorMessage: '',
         };
     }
 
@@ -25,30 +27,30 @@ class EditProductModal extends Component {
         this.setState({
             name: product_name,
             price: product_price.toString(),
-            quantity: product_quantity.toString()
-        })
+            quantity: product_quantity.toString(),
+        });
     }
 
     handleChange = (value, state) => {
-        this.setState({ [state]: value })
-    }
+        this.setState({ [state]: value });
+    };
 
     updateProduct = () => {
         const { name, price, quantity } = this.state;
-        this.setState({ errorMessage: "", loading: true });
+        this.setState({ errorMessage: '', loading: true });
 
         if (name && price && quantity) {
             fetch(`http://dummy.restapiexample.com/api/v1/update/${this.props.selectedProduct.id}`, {
-                method: "PUT",
+                method: 'PUT',
                 headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     product_name: this.state.name,
                     product_price: parseFloat(this.state.price),
-                    product_quantity: parseInt(this.state.quantity)
-                })
+                    product_quantity: parseInt(this.state.quantity),
+                }),
             })
                 .then(res => res.json())
                 .then(res => {
@@ -57,16 +59,16 @@ class EditProductModal extends Component {
                         product_name: res.product_name,
                         product_price: res.product_price,
                         product_quantity: res.product_quantity,
-                        id: this.props.selectedProduct.id
+                        id: this.props.selectedProduct.id,
                     });
                 })
                 .catch(() => {
-                    this.setState({ errorMessage: "Network Error. Please try again.", loading: false })
-                })
+                    this.setState({ errorMessage: 'Network Error. Please try again.', loading: false });
+                });
         } else {
-            this.setState({ errorMessage: "Fields are empty.", loading: false })
+            this.setState({ errorMessage: 'Fields are empty.', loading: false });
         }
-    }
+    };
 
     render() {
         const { isOpen, closeModal } = this.props;
@@ -83,21 +85,21 @@ class EditProductModal extends Component {
                     <TextInput
                         value={name}
                         style={styles.textBox}
-                        onChangeText={(text) => this.handleChange(text, "name")}
+                        onChangeText={(text) => this.handleChange(text, 'name')}
                         placeholder="Product Name" />
 
                     <TextInput
                         value={price}
                         keyboardType="numeric"
                         style={styles.textBox}
-                        onChangeText={(text) => this.handleChange(text, "price")}
+                        onChangeText={(text) => this.handleChange(text, 'price')}
                         placeholder="Price" />
 
                     <TextInput
                         value={quantity}
                         keyboardType="numeric"
                         style={styles.textBox}
-                        onChangeText={(text) => this.handleChange(text, "quantity")}
+                        onChangeText={(text) => this.handleChange(text, 'quantity')}
                         placeholder="Quantity" />
 
                     {loading ? <Text style={styles.message}>Please Wait...</Text> : errorMessage ? <Text style={styles.message}>{errorMessage}</Text> : null}
@@ -107,7 +109,7 @@ class EditProductModal extends Component {
                             <Text style={styles.buttonText}>Update</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={closeModal} style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: "tomato" }}>
+                        <TouchableOpacity onPress={closeModal} style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: 'tomato' }}>
                             <Text style={styles.buttonText}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
@@ -122,40 +124,40 @@ export default EditProductModal;
 
 const styles = StyleSheet.create({
     container: {
-        padding: 15
+        padding: 15,
     },
     title: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         fontSize: 20,
-        marginBottom: 20
+        marginBottom: 20,
     },
     textBox: {
         borderWidth: 1,
         borderRadius: 6,
-        borderColor: "rgba(0,0,0,0.3)",
+        borderColor: 'rgba(0,0,0,0.3)',
         marginBottom: 15,
         fontSize: 18,
-        padding: 10
+        padding: 10,
     },
     buttonContainer: {
         marginTop: 10,
-        flexDirection: "row",
-        alignItems: "center"
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     button: {
         borderRadius: 5,
         marginVertical: 20,
         alignSelf: 'flex-start',
-        backgroundColor: "gray",
+        backgroundColor: 'gray',
     },
     buttonText: {
-        color: "white",
+        color: 'white',
         paddingVertical: 6,
         paddingHorizontal: 10,
-        fontSize: 16
+        fontSize: 16,
     },
     message: {
-        color: "tomato",
-        fontSize: 17
-    }
+        color: 'tomato',
+        fontSize: 17,
+    },
 });

@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
-import Fonts from '../../constants/Fonts'
-import Colors from '../../constants/Colors'
+import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
+import Fonts from '../../constants/Fonts';
+import Colors from '../../constants/Colors';
 
 const ContactUsBottomSheet = ({ onClose }) => {
     return (
@@ -11,8 +11,8 @@ const ContactUsBottomSheet = ({ onClose }) => {
                 <Text style={styles.topButtonText}>Done</Text>
             </TouchableOpacity>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     topButton: {
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ContactUsBottomSheet
+export default ContactUsBottomSheet;

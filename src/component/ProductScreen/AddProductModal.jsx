@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
 import {
     Modal,
@@ -5,39 +6,39 @@ import {
     Text,
     TextInput,
     StyleSheet,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 
 class AddProductModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            productName: "",
-            productPrice: "",
+            productName: '',
+            productPrice: '',
             loading: false,
-            errorMessage: ''
+            errorMessage: '',
         };
     }
 
     handleChange = (value, state) => {
-        this.setState({ [state]: value })
-    }
+        this.setState({ [state]: value });
+    };
 
     addProduct = () => {
         const { productName, productPrice } = this.state;
-        this.setState({ errorMessage: "", loading: true });
+        this.setState({ errorMessage: '', loading: true });
 
         if (productName && productPrice) {
             fetch('http://yourapi.com/addProduct', {
-                method: "POST",
+                method: 'POST',
                 headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     productName,
-                    productPrice
-                })
+                    productPrice,
+                }),
             })
                 .then(res => res.json())
                 .then(res => {
@@ -45,16 +46,16 @@ class AddProductModal extends Component {
                     this.props.addProduct({
                         product_name: res.productName,
                         product_price: res.productPrice,
-                        id: res.id
+                        id: res.id,
                     });
                 })
                 .catch(() => {
-                    this.setState({ errorMessage: "Network Error. Please try again.", loading: false })
-                })
+                    this.setState({ errorMessage: 'Network Error. Please try again.', loading: false });
+                });
         } else {
-            this.setState({ errorMessage: "Fields are empty.", loading: false })
+            this.setState({ errorMessage: 'Fields are empty.', loading: false });
         }
-    }
+    };
 
     render() {
         const { isOpen, closeModal } = this.props;
@@ -70,13 +71,13 @@ class AddProductModal extends Component {
 
                     <TextInput
                         style={styles.textBox}
-                        onChangeText={(text) => this.handleChange(text, "productName")}
+                        onChangeText={(text) => this.handleChange(text, 'productName')}
                         placeholder="Product Name" />
 
                     <TextInput
                         keyboardType="numeric"
                         style={styles.textBox}
-                        onChangeText={(text) => this.handleChange(text, "productPrice")}
+                        onChangeText={(text) => this.handleChange(text, 'productPrice')}
                         placeholder="Product Price" />
 
                     {loading ? <Text
@@ -92,7 +93,7 @@ class AddProductModal extends Component {
 
                         <TouchableOpacity
                             onPress={closeModal}
-                            style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: "tomato" }}>
+                            style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: 'tomato' }}>
                             <Text style={styles.buttonText}>Cancel</Text>
                         </TouchableOpacity>
                     </View>
@@ -107,40 +108,40 @@ export default AddProductModal;
 
 const styles = StyleSheet.create({
     container: {
-        padding: 15
+        padding: 15,
     },
     title: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         fontSize: 20,
-        marginBottom: 20
+        marginBottom: 20,
     },
     textBox: {
         borderWidth: 1,
         borderRadius: 6,
-        borderColor: "rgba(0,0,0,0.3)",
+        borderColor: 'rgba(0,0,0,0.3)',
         marginBottom: 15,
         fontSize: 18,
-        padding: 10
+        padding: 10,
     },
     buttonContainer: {
         marginTop: 10,
-        flexDirection: "row",
-        alignItems: "center"
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     button: {
         borderRadius: 5,
         marginVertical: 20,
         alignSelf: 'flex-start',
-        backgroundColor: "gray",
+        backgroundColor: 'gray',
     },
     buttonText: {
-        color: "white",
+        color: 'white',
         paddingVertical: 6,
         paddingHorizontal: 10,
-        fontSize: 16
+        fontSize: 16,
     },
     message: {
-        color: "tomato",
-        fontSize: 17
-    }
+        color: 'tomato',
+        fontSize: 17,
+    },
 });

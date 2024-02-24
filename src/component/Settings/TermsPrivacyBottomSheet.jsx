@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-import Fonts from '../../constants/Fonts'
-import Colors from '../../constants/Colors'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
+import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import Fonts from '../../constants/Fonts';
+import Colors from '../../constants/Colors';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 
 const TermsPrivacyBottomSheet = ({ onClose }) => {
     return (
@@ -11,8 +11,8 @@ const TermsPrivacyBottomSheet = ({ onClose }) => {
                 <Text style={styles.topButtonText}>Done</Text>
             </TouchableOpacity>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     topButton: {
@@ -24,5 +24,5 @@ const styles = StyleSheet.create({
         fontFamily: Fonts.bold,
         color: Colors.PRIMARY,
     },
-})
-export default TermsPrivacyBottomSheet
+});
+export default TermsPrivacyBottomSheet;

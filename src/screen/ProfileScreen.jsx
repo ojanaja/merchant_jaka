@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   SafeAreaView,
@@ -8,7 +10,7 @@ import {
   View,
   Platform,
   Linking,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -222,7 +224,7 @@ const ProfileScreen = () => {
       <TouchableOpacity style={styles.profileContainer} onPress={() => toggleBottomSheet('profileSettings')}>
         <Image source={require('../assets/images/user-profile.jpg')} style={styles.profilePicture} />
         <View style={[styles.textContainer, { width: 320 }]}>
-          <Text style={styles.textStyle}>Martha Banks</Text>
+          <Text style={styles.textStyle}>Store</Text>
           <MaterialIcons name="arrow-forward-ios" size={18} color={Colors.GREY} />
         </View>
       </TouchableOpacity>

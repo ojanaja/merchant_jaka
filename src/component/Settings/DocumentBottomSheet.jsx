@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet, Platform, PermissionsAndroid, CameraRoll } from 'react-native';
+/* eslint-disable react-native/no-inline-styles */
+import { View, Text, TouchableOpacity, StyleSheet, Platform, PermissionsAndroid } from 'react-native';
 import React from 'react';
 import Fonts from '../../constants/Fonts';
 import Colors from '../../constants/Colors';
@@ -54,8 +55,8 @@ const DocumentBottomSheet = ({ onClose }) => {
                 </View>
             </TouchableOpacity>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -105,4 +106,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DocumentBottomSheet
+export default DocumentBottomSheet;

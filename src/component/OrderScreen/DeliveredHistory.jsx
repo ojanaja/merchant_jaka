@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
-import Colors from '../../constants/Colors'
-import Fonts from '../../constants/Fonts'
+import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import Colors from '../../constants/Colors';
+import Fonts from '../../constants/Fonts';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const DeliveredHistory = () => {
@@ -39,13 +39,13 @@ const DeliveredHistory = () => {
                 }
             </ScrollView>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        backgroundColor: Colors.BROKENWHITE
+        backgroundColor: Colors.BROKENWHITE,
     },
     historyDetailsContainer: {
         height: 'auto',
@@ -74,12 +74,12 @@ const styles = StyleSheet.create({
     historyHeader: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     historyHeaderText: {
         fontFamily: Fonts.regular,
         fontSize: 14,
-        color: Colors.BLACK
+        color: Colors.BLACK,
     },
     historyInfoTextStore: {
         fontFamily: Fonts.semibold,
@@ -103,6 +103,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 5,
     },
-})
+});
 
-export default DeliveredHistory
+export default DeliveredHistory;

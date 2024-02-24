@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { Component } from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import AddProductModal from '../component/ProductScreen/AddProductModal';
 import EditProductModal from '../component/ProductScreen/EditProductModal';
 import DeleteProductModal from '../component/ProductScreen/DeleteProductModal';
@@ -11,58 +12,58 @@ class ProductScreen extends Component {
         isEditProductModalOpen: false,
         isDeleteProductModalOpen: false,
         loading: false,
-        errorMessage: "",
-        selectedProduct: {}
-    }
+        errorMessage: '',
+        selectedProduct: {},
+    };
 
     componentDidMount() {
         this.getData();
     }
 
     getData = () => {
-        this.setState({ errorMessage: "", loading: true })
+        this.setState({ errorMessage: '', loading: true });
         fetch('http://dummy.restapiexample.com/api/v1/employees', {
-            method: "GET"
+            method: 'GET',
         })
             .then(res => res.json())
             .then(res => this.setState({
                 products: res.data, // Assuming res.data is the array of products
                 loading: false,
-                errorMessage: ""
+                errorMessage: '',
             }))
             .catch(error => {
-                console.error("Error fetching data:", error);
+                console.error('Error fetching data:', error);
                 this.setState({
                     loading: false,
-                    errorMessage: "Network Error. Please try again."
+                    errorMessage: 'Network Error. Please try again.',
                 });
             });
-    }
+    };
 
 
     toggleAddProductModal = () => {
         this.setState({ isAddProductModalOpen: !this.state.isAddProductModalOpen });
-    }
+    };
 
     toggleEditProductModal = () => {
         this.setState({ isEditProductModalOpen: !this.state.isEditProductModalOpen });
-    }
+    };
 
     toggleDeleteProductModal = () => {
         this.setState({ isDeleteProductModalOpen: !this.state.isDeleteProductModalOpen });
-    }
+    };
 
     addProduct = (data) => {
-        this.setState({ products: [data, ...this.state.products] })
-    }
+        this.setState({ products: [data, ...this.state.products] });
+    };
 
     updateProduct = (data) => {
-        this.setState({ products: this.state.products.map(product => product.id == data.id ? data : product) });
-    }
+        this.setState({ products: this.state.products.map(product => product.id === data.id ? data : product) });
+    };
 
     deleteProduct = productId => {
-        this.setState({ products: this.state.products.filter(product => product.id !== productId) })
-    }
+        this.setState({ products: this.state.products.filter(product => product.id !== productId) });
+    };
 
     render() {
         const { loading, errorMessage, products, isAddProductModalOpen,
@@ -79,7 +80,7 @@ class ProductScreen extends Component {
                         {Array.isArray(products) && products.map((data, index) => <View
                             style={styles.productListContainer}
                             key={data.id}>
-                            <Text style={{ ...styles.listItem, color: "tomato" }}>{index + 1}.</Text>
+                            <Text style={{ ...styles.listItem, color: 'tomato' }}>{index + 1}.</Text>
                             <Text style={styles.name}>{data.product_name}</Text>
                             <Text style={styles.listItem}>Product Price: {data.product_price}</Text>
 
@@ -87,7 +88,7 @@ class ProductScreen extends Component {
                                 <TouchableOpacity
                                     onPress={() => {
                                         this.toggleEditProductModal();
-                                        this.setState({ selectedProduct: data })
+                                        this.setState({ selectedProduct: data });
                                     }}
                                     style={{ ...styles.button, marginVertical: 0 }}>
                                     <Text style={styles.buttonText}>Edit</Text>
@@ -96,9 +97,9 @@ class ProductScreen extends Component {
                                 <TouchableOpacity
                                     onPress={() => {
                                         this.toggleDeleteProductModal();
-                                        this.setState({ selectedProduct: data })
+                                        this.setState({ selectedProduct: data });
                                     }}
-                                    style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: "tomato" }}>
+                                    style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: 'tomato' }}>
                                     <Text style={styles.buttonText}>Delete</Text>
                                 </TouchableOpacity>
                             </View>
@@ -138,48 +139,48 @@ export default ProductScreen;
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
     },
     button: {
         borderRadius: 5,
         marginVertical: 20,
         alignSelf: 'flex-start',
-        backgroundColor: "gray",
+        backgroundColor: 'gray',
     },
     buttonText: {
-        color: "white",
+        color: 'white',
         paddingVertical: 6,
         paddingHorizontal: 10,
-        fontSize: 16
+        fontSize: 16,
     },
     title: {
-        fontWeight: "bold",
+        fontWeight: 'bold',
         fontSize: 20,
-        marginBottom: 10
+        marginBottom: 10,
     },
     productListContainer: {
         marginBottom: 25,
         elevation: 4,
-        backgroundColor: "white",
+        backgroundColor: 'white',
         padding: 10,
         borderRadius: 6,
         borderTopWidth: 1,
-        borderColor: "rgba(0,0,0,0.1)"
+        borderColor: 'rgba(0,0,0,0.1)',
     },
     name: {
-        fontWeight: "bold",
-        fontSize: 16
+        fontWeight: 'bold',
+        fontSize: 16,
     },
     listItem: {
-        fontSize: 16
+        fontSize: 16,
     },
     buttonContainer: {
         marginTop: 10,
-        flexDirection: "row",
-        alignItems: "center"
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     message: {
-        color: "tomato",
-        fontSize: 17
-    }
-})
+        color: 'tomato',
+        fontSize: 17,
+    },
+});
