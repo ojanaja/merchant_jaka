@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, KeyboardAvoidingView, ScrollView, ActivityIndicator } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import { useNavigation } from '@react-navigation/native';
@@ -8,16 +8,30 @@ import { TextInput } from 'react-native-element-textinput';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ALERT_TYPE, Dialog, AlertNotificationRoot } from 'react-native-alert-notification';
+import BottomSheet from '@gorhom/bottom-sheet';
+import ShowMaps from '../component/ShowMaps';
 
 const RegisterScreen = () => {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [address, setAddress] = useState('');
-    const [lat, setLat] = useState('');
-    const [lng, setLng] = useState('');
+    const [lat, setLat] = useState(null);
+    const [lng, setLng] = useState(null);
+
     const [isLoading, setIsLoading] = useState(false);
+    const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false); // New state variable
     const navigation = useNavigation();
+    const bottomSheetRef = useRef(null);
+    const snapPoints = useMemo(() => ['100%', '100%'], []);
+
+    const handleSheetChanges = useCallback((index) => {
+        console.log('handleSheetChanges', index);
+    }, []);
+
+    const closeBottomSheet = () => {
+        bottomSheetRef.current?.close();
+    };
 
     const handleRegister = () => {
         if (!name || !phone || !password) {
@@ -31,49 +45,56 @@ const RegisterScreen = () => {
         }
 
         setIsLoading(true);
+        setIsBottomSheetOpen(true); // Open the bottom sheet
+    };
 
+    const handleBottomSheetClose = async (coordinates) => {
+        setLat(coordinates.latitude);
+        setLng(coordinates.longitude);
+        console.log(coordinates.latitude);
+        console.log(coordinates.longitude);
+        closeBottomSheet();
+
+        if (coordinates.latitude !== null && coordinates.longitude !== null) {
+            await postUserData(coordinates.latitude, coordinates.longitude);
+        } else {
+            console.log('Latitude or longitude is null, not posting user data.');
+        }
+    };
+
+    const postUserData = async (plat, plng) => {
         const userData = {
             name: name,
             phone: phone,
             password: password,
             address: address,
-            lat: lat,
-            lng: lng,
+            lat: plat,
+            lng: plng,
             type: 'merchant',
         };
 
-        AsyncStorage.setItem('userData', JSON.stringify(userData))
-            .then(() => {
-                axios.post('https://jaka-green.vercel.app/api/v1/auth/register', userData)
-                    .then(response => {
-                        console.log('User Data:', userData);
-                        console.log('Registration successful:', response.data);
-                        // navigation.navigate('OTP', { nim: nim });
-                    })
-                    .catch(error => {
-                        console.error('User Data:', userData);
-                        console.error('Registration failed:', error);
-                    })
-                    .finally(() => {
-                        setIsLoading(false); // Set loading state back to false regardless of success or failure
-                    });
-            })
-            .catch(error => {
-                console.error('Error storing user data:', error);
-                setIsLoading(false); // Set loading state back to false if AsyncStorage fails
-            });
+        try {
+            await AsyncStorage.setItem('userData', JSON.stringify(userData.phone));
+            const response = await axios.post('https://jaka-itfair.vercel.app/api/v1/auth/register', userData);
+            console.log('User Data:', userData);
+            console.log('Registration successful:', response.data);
+            navigation.navigate('OTP');
+        } catch (error) {
+            console.error('User Data:', userData);
+            console.error('Registration failed:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <AlertNotificationRoot>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-            >
+            <KeyboardAvoidingView style={{ flex: 1 }}>
                 <ScrollView contentContainerStyle={styles.container}>
                     <View style={styles.contentContainer}>
                         <View style={styles.backgroundImageContainer}>
                             <View style={styles.textContainer}>
-                                <Text style={styles.signUpText}>Buat Akun<Text style={styles.headerText}> menggunakan email dan nomor WhatsApp</Text></Text>
+                                <Text style={styles.signUpText}>Buat Akun<Text style={styles.headerText}> menggunakan nomor WhatsApp</Text></Text>
                             </View>
                             <Image style={styles.imageBackground} source={require('../assets/images/Background.png')} />
                         </View>
@@ -147,6 +168,19 @@ const RegisterScreen = () => {
                         <Text style={styles.loginDefaultText}>Sudah punya akun? <Text style={styles.loginBoldText}>Masuk</Text></Text>
                     </TouchableOpacity>
                 </ScrollView>
+                {isBottomSheetOpen && ( // Conditionally render the bottom sheet
+                    <BottomSheet
+                        ref={bottomSheetRef}
+                        index={0}
+                        snapPoints={snapPoints}
+                        onChange={handleSheetChanges}
+                        animateOnMount={true}
+                        enableOverDrag={true}
+                        enablePanDownToClose={true}
+                    >
+                        <ShowMaps closeBottomSheet={handleBottomSheetClose} />
+                    </BottomSheet>
+                )}
             </KeyboardAvoidingView>
         </AlertNotificationRoot>
     );

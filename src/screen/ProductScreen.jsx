@@ -5,6 +5,8 @@ import AddProductModal from '../component/ProductScreen/AddProductModal';
 import EditProductModal from '../component/ProductScreen/EditProductModal';
 import DeleteProductModal from '../component/ProductScreen/DeleteProductModal';
 import Colors from '../constants/Colors';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class ProductScreen extends Component {
   state = {
@@ -21,24 +23,32 @@ class ProductScreen extends Component {
     this.getData();
   }
 
-  getData = () => {
+  getData = async () => {
     this.setState({ errorMessage: '', loading: true });
-    fetch('http://dummy.restapiexample.com/api/v1/employees', {
-      method: 'GET',
-    })
-      .then(res => res.json())
-      .then(res => this.setState({
-        products: res.data, // Assuming res.data is the array of products
+    try {
+      const merchantId = await AsyncStorage.getItem('userId');
+      const userToken = await AsyncStorage.getItem('userToken');
+      console.log(userToken);
+      console.log(merchantId);
+      const response = await axios.get(`https://jaka-itfair.vercel.app/api/v1/products?merchant_id=${merchantId}`, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${userToken}`,
+        },
+      });
+      this.setState({
+        products: response.data.data, // Assuming response data is an array of products
         loading: false,
         errorMessage: '',
-      }))
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        this.setState({
-          loading: false,
-          errorMessage: 'Network Error. Please try again.',
-        });
       });
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      this.setState({
+        loading: false,
+        errorMessage: 'Network Error. Please try again.',
+      });
+    }
   };
 
 
@@ -78,34 +88,33 @@ class ProductScreen extends Component {
         </TouchableOpacity>
         <ScrollView>
           <View style={styles.container}>
-            {Array.isArray(products) && products.map((data, index) => <View
-              style={styles.productListContainer}
-              key={data.id}>
-              <Text style={{ ...styles.listItem, color: 'red' }}>{index + 1}.</Text>
-              <Text style={styles.name}>{data.product_name}</Text>
-              <Text style={styles.listItem}>Harga Produk: {data.product_price}</Text>
+            {products.map((product, index) => (
+              <View style={styles.productListContainer} key={product.id}>
+                <Text style={{ ...styles.listItem, color: 'red' }}>{index + 1}.</Text>
+                <Text style={styles.name}>{product.name}</Text>
+                <Text style={styles.listItem}>Harga Produk: {product.price}</Text>
 
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.toggleEditProductModal();
-                    this.setState({ selectedProduct: data });
-                  }}
-                  style={{ ...styles.button, marginVertical: 0 }}>
-                  <Text style={styles.buttonText}>Ubah</Text>
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.toggleEditProductModal();
+                      this.setState({ selectedProduct: product });
+                    }}
+                    style={{ ...styles.button, marginVertical: 0 }}>
+                    <Text style={styles.buttonText}>Ubah</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => {
-                    this.toggleDeleteProductModal();
-                    this.setState({ selectedProduct: data });
-                  }}
-                  style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: 'tomato' }}>
-                  <Text style={styles.buttonText}>Delete</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.toggleDeleteProductModal();
+                      this.setState({ selectedProduct: product });
+                    }}
+                    style={{ ...styles.button, marginVertical: 0, marginLeft: 10, backgroundColor: 'tomato' }}>
+                    <Text style={styles.buttonText}>Delete</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>)}
-
+            ))}
             {loading ? <Text
               style={styles.message}>Tunggu Sebentar...</Text> : errorMessage ? <Text
                 style={styles.message}>{errorMessage}</Text> : null}

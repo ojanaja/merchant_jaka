@@ -11,6 +11,7 @@ import {
   Platform,
   Linking,
   PermissionsAndroid,
+  Dimensions,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -26,6 +27,9 @@ import DocumentBottomSheet from '../component/Settings/DocumentBottomSheet';
 import ProfileSettingsSheet from '../component/Settings/ProfileSettingsSheet';
 import ContactUsBottomSheet from '../component/Settings/ContactUsBottomSheet';
 import TermsPrivacyBottomSheet from '../component/Settings/TermsPrivacyBottomSheet';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const ProfileScreen = () => {
   const [notificationEnabled, setNotificationEnabled] = useState(false);
@@ -42,6 +46,53 @@ const ProfileScreen = () => {
   const updatePermissionsState = (notification, location) => {
     setNotificationEnabled(notification);
     setLocationEnabled(location);
+  };
+
+  const [token, setToken] = useState('');
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('userToken');
+        if (storedToken !== null) {
+          const parsedToken = JSON.parse(storedToken);
+          console.log(parsedToken);
+          setToken(parsedToken);
+        }
+      } catch (error) {
+        console.error('Error fetching token:', error);
+      }
+    };
+
+    fetchToken();
+  }, []);
+
+  const handleSignOut = async () => {
+    console.log(token);
+    try {
+      const requestBody = {
+        token: token,
+      };
+
+      const response = await axios.post(
+        'https://jaka-itfair.vercel.app/api/v1/auth/logout',
+        requestBody,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+
+      console.log(response.data);
+
+      await AsyncStorage.removeItem('userToken');
+    } catch (error) {
+      await AsyncStorage.removeItem('userToken');
+      console.error('Sign out error:', error);
+    }
   };
 
   const checkPermissions = useCallback(async () => {
@@ -285,6 +336,11 @@ const ProfileScreen = () => {
           <MaterialIcons name="arrow-forward-ios" size={18} color={Colors.GREY} />
         </View>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.signOutContainer} onPress={handleSignOut}>
+        <View>
+          <Text style={styles.signOutText}>Sign Out</Text>
+        </View>
+      </TouchableOpacity>
       {Object.entries(bottomSheets).map(([key, value]) => (
         value && (
           <BottomSheet
@@ -307,9 +363,27 @@ const ProfileScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  signOutText: {
+    fontFamily: Fonts.black,
+    fontSize: 15,
+    color: Colors.WHITE
+  },
+  signOutContainer: {
+    backgroundColor: Colors.RED,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: Dimensions.get('window').height - 850,
+    width: Dimensions.get('window').width - 100,
+    marginTop: 250,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.WHITE,
+    elevation: 1,
+  },
   container: {
     width: '100%',
     height: '100%',
+    alignItems: 'center',
   },
   profileContainer: {
     marginVertical: 20,

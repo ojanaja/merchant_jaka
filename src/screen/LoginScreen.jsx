@@ -19,13 +19,14 @@ const LoginScreen = () => {
             type: 'merchant',
         };
 
-        axios.post('https://jaka-green.vercel.app/api/v1/auth/login', userData)
+        axios.post('https://jaka-itfair.vercel.app/api/v1/auth/login', userData)
             .then(response => {
                 console.log('Login successful:', response.data);
+                AsyncStorage.setItem('userId', response.data.data.user.id);
                 AsyncStorage.setItem('userToken', response.data.data.token)
                     .then(() => {
                         console.log('Token stored successfully.');
-                        navigation.navigate('AppStack');
+                        navigation.navigate('TabNavigation');
                     })
                     .catch(error => {
                         console.error('Error storing token:', error);
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     loginButtonContainer: {
         alignItems: 'center',
         justifyContent: 'flex-end',
-        height: Dimensions.get('window').height - 630,
+        height: Dimensions.get('window').height - 680,
     },
     loginDefaultText: {
         fontFamily: Fonts.regular,

@@ -10,6 +10,7 @@ import Fonts from '../constants/Fonts';
 import OTPScreen from '../screen/OTPScreen';
 import RegisterScreen from '../screen/RegisterScreen';
 import LoginScreen from '../screen/LoginScreen';
+import AuthNavigation from './AuthNavigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -58,16 +59,6 @@ const TabNavigation = () => {
             ),
         }}
       />
-      <Tab.Screen name="OTP"
-        component={OTPScreen}
-      />
-      <Tab.Screen name="Daftar"
-        component={RegisterScreen}
-      />
-      <Tab.Screen name="Masuk"
-        component={LoginScreen}
-      />
-
     </Tab.Navigator>
   );
 };

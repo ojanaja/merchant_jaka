@@ -1,30 +1,47 @@
 /* eslint-disable no-shadow */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import { OtpInput } from 'react-native-otp-entry';
 import axios from 'axios';
 import Colors from '../constants/Colors';
 import Fonts from '../constants/Fonts';
 import Header from '../component/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OTPScreen = ({ navigation, route }) => {
     const [code, setCode] = useState('');
-    // const { nim } = route.params;
+    const [phoneNumber, setPhoneNumber] = useState('');
+
+    useEffect(() => {
+        const fetchPhoneNumber = async () => {
+            try {
+                const storedPhoneNumber = await AsyncStorage.getItem('userData');
+                if (storedPhoneNumber !== null) {
+                    const parsedPhoneNumber = JSON.parse(storedPhoneNumber);
+                    setPhoneNumber(parsedPhoneNumber);
+                }
+            } catch (error) {
+                console.error('Error fetching phone number:', error);
+            }
+        };
+
+        fetchPhoneNumber();
+    }, []);
 
     const handleOTP = async () => {
+        console.log(phoneNumber);
         const userOTP = {
-            // nim: nim,
+            phone: phoneNumber,
             otp: code,
-            type: 'penjamu',
+            type: 'merchant',
         };
 
         try {
-            // await AsyncStorage.setItem('userOTP', JSON.stringify(userOTP));
             const response = await axios.post('https://jaka-itfair.vercel.app/api/v1/auth/verify-otp', userOTP);
             console.log('User OTP:', userOTP);
             console.log('Verification successful:', response.data);
-            navigation.navigate('Home');
+            navigation.navigate('Login');
         } catch (error) {
             console.error('User OTP:', userOTP);
             console.error('Verification failed:', error);
@@ -46,7 +63,7 @@ const OTPScreen = ({ navigation, route }) => {
                         focusedPinCodeContainerStyle: styles.focusPinCodeContainerStyle,
                     }}
                 />
-                <Text style={styles.infoText}>Kami telah mengirim kote OTP ke email anda. Silahkan cek email anda.</Text>
+                <Text style={styles.infoText}>Kami telah mengirim kode OTP ke email anda. Silahkan cek email anda.</Text>
                 <TouchableOpacity onPress={handleOTP} style={styles.verifyButton}>
                     <Text style={styles.verifyButtonText}>Verifikasi</Text>
                 </TouchableOpacity>
@@ -54,6 +71,7 @@ const OTPScreen = ({ navigation, route }) => {
         </SafeAreaView>
     );
 };
+
 
 const styles = StyleSheet.create({
     headerContainer: {
